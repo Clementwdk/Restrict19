@@ -1,7 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import sessionmaker
-#from covapp.models import db, Content
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -47,17 +45,33 @@ class CRestrict(db.Model):
         return '<Country %r>' % self.country
 
 
-
-
 @app.route('/', methods=['POST', 'GET'])
 def home():
     country = CRestrict.query.all()
-    return render_template('Index.html', country=country)
+    if request.method == "POST":
+        print("OOOOO ")
+        userChoice = request.form.get("ct")
+        if request.form["submit_button"] == 'push':
+            print("uuuu "+userChoice)
+            redirect(url_for(res, country=userChoice))
+    elif request.method == "GET":
+        return render_template('Index.html', country=country)
 
 @app.route('/res', methods=['POST', 'GET'])
 def res():
-    country = CRestrict.query.all()
-    return "coucou"
+    sCountry = request.args.get('country')
+    if sCountry:
+        try:
+            for x in CRestrict.query.all():
+                if x.country == sCountry:
+                    print('Country Find')
+                    sCountry = x
+        except:
+            return 'INVALID DATA'
+
+        print("Ok")
+
+    return render_template('res.html', infoC = sCountry)
 
 
 

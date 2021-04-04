@@ -1,21 +1,30 @@
 {%  extends "base.html" %}
 {% block title %}
-    <br>
-<div class="row py-lg-5">
+<br>
+
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark shadow-lg p-3 mb-5 bg-body rounded">
+      <div class="text-center">
+      </div>
       <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Choose your destination</h1>
+        <h1 class="fw-light text-dark">Choose your destination</h1>
         <p class="lead text-muted">On Restrict-19 you can find all the necessary information for all travellers or workers who wish travel abroad. We collect all necessary data for a good trip during this pandemic period. </p>
         <br>
         <p>
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" method="POST">
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="ct">
               <option selected>Select a Country</option>
                {% for countries in country %}
-              <option value="1"> {{ countries.country }} </option>
+              <option value="{{ countries.country }}"> {{ countries.country }} </option>
                 {% endfor %}
             </select>
-            <a href="/res" class="btn btn-primary my-2">Search</a>
+            <form method ="post" action="/">
+                <div class="d-grid gap-2 col-6 mx-auto"   >
+                    <a type="submit" class="btn btn-primary btn-lg" name="subButton" value="push">Search</a>
+                </div>
+            </form>
         </p>
       </div>
-    </div>
+
+
+</div>
 
 {% endblock %}
