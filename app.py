@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -51,11 +52,13 @@ def home():
     if request.method == "POST":
         print("OOOOO ")
         userChoice = request.form.get("ct")
-        if request.form["submit_button"] == 'push':
+        if request.form.get("subButton") == "Search":
             print("uuuu "+userChoice)
-            redirect(url_for(res, country=userChoice))
-    elif request.method == "GET":
-        return render_template('Index.html', country=country)
+            #url_for('http://127.0.0.1:5000/res', country=userChoice)
+            return redirect(url_for('res', country=userChoice))
+
+    return render_template('Index.html', country=country)
+
 
 @app.route('/res', methods=['POST', 'GET'])
 def res():
