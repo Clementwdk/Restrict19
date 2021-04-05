@@ -76,7 +76,10 @@ def res():
 
     return render_template('res.html', infoC = sCountry)
 
-
+@app.route('/countryList')
+def countryList():
+    sCountry = CRestrict.query.all()
+    return render_template('countryList.html', infoC = sCountry)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
 {%  extends "base.html" %}
 {% block title %}
 <br>
+
+    {% block content %}
+    {% for infoC in infoC %}
     <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark shadow-lg p-3 mb-5 bg-body rounded">
-      {% block content %}
        <h1 class="fw-light text-dark text-center">{{ infoC.country }}</h1>
           <div class="restriction">
               {% if infoC.authorization_status == 'restricted' %}
@@ -46,8 +48,10 @@
          {% if infoC.temparature_check == True %}
             <img src=".\static\temperatureCheck.svg" class="rounded float-start" alt="" width="65" height="51" title="Temperature check">
          {% endif %}
-      {% endblock content %}
         <br>
     </div>
+   {% endfor %}
+   {% endblock content %}
+
 
 {% endblock %}
