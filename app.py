@@ -18,6 +18,9 @@ class Usercon(db.Model):
         self.name = name
         self.password = password
 
+    def __repr__(self):
+        return '<User %r>' % self.name
+
 class CRestrict(db.Model):
     country = db.Column(db.String(200), primary_key=True)
     authorization_status = db.Column(db.String(200))
@@ -106,6 +109,7 @@ def nwaccount():
         else:
             try:
                 db.session.add(Usercon(user,pwd))
+                db.session.commit()
                 print(1)
             except:
                 return 'Impossible to creat a new account'
@@ -117,6 +121,8 @@ def nwaccount():
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
     app.run(debug=True)
+    db.create_all()
+    print('after db.create_all()')
 
 
 
