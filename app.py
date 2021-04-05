@@ -76,10 +76,14 @@ def res():
 
     return render_template('res.html', infoC = sCountry)
 
-@app.route('/countryList')
+@app.route('/countryList', methods=['POST', 'GET'])
 def countryList():
     sCountry = CRestrict.query.all()
     return render_template('countryList.html', infoC = sCountry)
+
+@app.route('/login', methods=['POST', 'GET'])
+def logIn():
+    return render_template('logIn.html')
 
 
 if __name__ == "__main__":
