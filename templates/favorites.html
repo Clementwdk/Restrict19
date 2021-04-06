@@ -1,0 +1,14 @@
+{%  extends "base.html" %}
+{% block title %}
+<br>
+
+
+<form  method="POST" role="form" >
+    <h1 class="display-1"> Id : {{id.name}} </h1>
+    {% for infoC in id.countryFav %}
+        <p>{{ infoC }}</p>
+    {% endfor %}
+</form>
+
+<br>
+{% endblock %}
