@@ -4,10 +4,58 @@
 
 
 <form  method="POST" role="form" >
-    <h1 class="display-1"> Id : {{id.name}} </h1>
-    {% for infoC in id.countryFav %}
-        <p>{{ infoC }}</p>
-    {% endfor %}
+
+    {% for infoC in listc %}
+       <form  method="POST" role="form" >
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark shadow-lg p-3 mb-5 bg-body rounded mx-auto " style="width: 900px;">
+       <h1 class="fw-light text-dark text-center">{{ infoC.country }}</h1>
+          <div class="restriction">
+              {% if infoC.authorization_status == 'restricted' or infoC.authorization_status == 'Restricted'%}
+                    <h5 class="text-danger fs-6 text-center">{{ infoC.authorization_status }}</h5>
+              {% else %}
+                    <h5 class="text-success fs-6 text-center">{{ infoC.authorization_status }}</h5>
+              {% endif %}
+          </div>
+         <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <div class="badge bg-secondary text-wrap fs-6" style="width: 6rem;">Level : {{ infoC.severity }}</div>
+              </li>
+             <li class="list-group-item">
+                 <p class=" fs-5 fw-normal text-dark">Details: {{ infoC.details }}</p>
+             </li>
+             <li class="list-group-item">
+                <p class=" fs-5 fw-normal text-dark">Information: {{ infoC.infoRequirement }}</p>
+             </li>
+             <li class="list-group-item">
+                <p class=" fs-5 fw-normal text-dark">Test Medical: {{ infoC.test_medical_certificate }}</p>
+             </li>
+             <li class="list-group-item">
+                <p class=" fs-5 fw-normal text-dark">Other Medical Measures: {{ infoC.other_medical_measures }}</p>
+             </li>
+         </ul>
+         {% if infoC.use_of_mask == True %}
+            <img src=".\static\mask.svg" class="rounded float-start" alt="" width="60" height="48" title="Mask required">
+         {% endif %}
+         {% if infoC.nightclubs == True %}
+            <img src=".\static\nightclub.svg" class="rounded float-start" alt="" width="60" height="48" title="Night club open">
+         {% endif %}
+         {% if infoC.restaurants == True %}
+            <img src=".\static\restaurant.svg" class="rounded float-start" alt="" width="60" height="48" title="Restaurant open">
+         {% endif %}
+         {% if infoC.shops == True %}
+            <img src=".\static\shop.svg" class="rounded float-start" alt="" width="60" height="48" title="Shops open">
+         {% endif %}
+         {% if infoC.vaccination == True %}
+            <img src=".\static\vaccine.svg" class="rounded float-start" alt="" width="60" height="48" title="Vaccine required">
+         {% endif %}
+         {% if infoC.temparature_check == True %}
+            <img src=".\static\temperatureCheck.svg" class="rounded float-start" alt="" width="65" height="51" title="Temperature check">
+         {% endif %}
+        <br>
+    </div>
+    </form>
+   {% endfor %}
+
 </form>
 
 <br>

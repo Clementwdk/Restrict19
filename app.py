@@ -1,11 +1,17 @@
 from flask import Flask, g,render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from api import infoC
+from OpenSSL import SSL
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///app.db"
+app.secret_key = 'super secret key 2 '
 
 db = SQLAlchemy(app)
+apiData = infoC()
+
 
 class Usercon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,10 +26,6 @@ class Usercon(db.Model):
     def __repr__(self):
         return '<User %r>' % self.name
 
-    @staticmethod
-    def show(s):
-        print("country", s.country)
-        return s.disp()
 
 class CRestrict(db.Model):
     country = db.Column(db.String(200), primary_key=True)
@@ -62,9 +64,6 @@ class CRestrict(db.Model):
     def __repr__(self):
         return '<Country %r>' % self.country
 
-    def disp(self):
-        return '<Country %r>' % self.country
-
 
 users = Usercon.query.all()
 country = CRestrict.query.all()
@@ -77,21 +76,26 @@ def before_request():
         user = [x for x in users if x.id == session['user_id']][0]
         g.user = user
 
+@app.route('/test', methods=['POST', 'GET'])
+def test():
+    apiData.reqApi('Ireland')
+
+    return apiData.death
+
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if request.method == "POST":
-        print("OOOOO ")
         userChoice = request.form.get("ct")
         if request.form.get("subButton") == "Search":
-            print("uuuu "+userChoice)
             return redirect(url_for('res', country=userChoice))
-
     return render_template('Index.html', country=country)
 
 
 @app.route('/res', methods=['POST', 'GET'])
 def res():
     sCountry = request.args.get('country')
+    actionFavButton = request.form.get("FavButton")
+    listInfo = apiData.reqApilIST(sCountry)
     if sCountry:
         try:
             for x in country:
@@ -100,10 +104,21 @@ def res():
                     sCountry = x
         except:
             return 'INVALID DATA'
-
         print("Ok")
-
-    return render_template('res.html', infoC = sCountry)
+    if request.method == "POST":
+        if actionFavButton:
+            try:
+                id = session['user_id']
+            except:
+                return 'You are not connected'
+            for x in users:
+                if x.id == id:
+                    print("count exists")
+                    userLog =  Usercon.query.filter_by(id=x.id).first()
+                    userLog.countryFav.append(actionFavButton)
+                    db.session.commit()
+                    flash("Country add to your favorites")
+    return render_template('res.html', infoC = sCountry, apiData= listInfo)
 
 @app.route('/countryList', methods=['POST', 'GET'])
 def countryList():
@@ -122,7 +137,8 @@ def countryList():
                     userLog =  Usercon.query.filter_by(id=x.id).first()
                     userLog.countryFav.append(actionFavButton)
                     db.session.commit()
-    return render_template('countryList.html', infoC=sCountry)
+                    flash("Country add to your favorites")
+    return render_template('countryList.html', infoC=sCountry, apiData= apiData)
 
 
 
@@ -146,13 +162,19 @@ def logIn():
 
 @app.route('/favorites', methods=['POST', 'GET'])
 def favorites():
+    listc = []
     try:
         id = session['user_id']
     except:
         return 'You are not connected'
 
-    content = Usercon.query.get(id)
-    return render_template('favorites.html', id=content, accessCountry = CRestrict)
+    content = Usercon.query.filter_by(id=id).first()
+
+    for fav in content.countryFav:
+       queryC = CRestrict.query.filter_by(country=fav).first()
+       if queryC not in listc and queryC:
+        listc.append(queryC)
+    return render_template('favorites.html', id=content, listc=listc)
 
 @app.route('/nwaccount', methods=['POST', 'GET'])
 def nwaccount():
@@ -178,10 +200,14 @@ def logout():
         session.pop('user_id', None)
         return render_template('disconnected.html')
 
+
 if __name__ == "__main__":
-    app.secret_key = 'super secret key'
     app.run(debug=True)
+    app.config['SESSION_TYPE'] = 'filesystem'
     db.create_all()
+
+
+
 
 
 
