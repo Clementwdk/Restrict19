@@ -1,35 +1,23 @@
-from flask import Flask, request, jsonify
 import requests
 
 url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
-
-
 headers = {
     'x-rapidapi-key': "096f9b67edmsh12f5f736f33e54ap13a933jsn5facda559584",
     'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"}
 
 
-class infoC:
+class InfoC:
     def __init__(self):
         self.death ="",
         self.recovered = "",
         self.confirmed = "",
 
-    def getDeath(self, country):
-        querystring = {"country": country}
-        response = requests.request("GET", url, headers=headers, params=querystring,)
-        a = response.json()
-        return str(a['data']['deaths'])
-    def getRecovered(self, country):
-        querystring = {"country": country}
-        response = requests.request("GET", url, headers=headers, params=querystring,)
-        a = response.json()
-        return str(a['data']['recovered'])
-    def getConfirmed(self, country):
-        querystring = {"country": country}
-        response = requests.request("GET", url, headers=headers, params=querystring,)
-        a = response.json()
-        return str(a['data']['confirmed'])
+    def getDeath(self):
+        return self.death
+    def getRecovered(self):
+        return self.recovered
+    def getConfirmed(self):
+        return self.confirmed
 
 
     def reqApi(self,country):

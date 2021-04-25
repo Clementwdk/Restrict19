@@ -1,6 +1,6 @@
 from flask import Flask, g,render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from api import infoC
+from api import InfoC
 from OpenSSL import SSL
 
 
@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///app.db"
 app.secret_key = 'super secret key 2 '
 
 db = SQLAlchemy(app)
-apiData = infoC()
+apiData = InfoC()
 
 
 class Usercon(db.Model):
